@@ -1,3 +1,4 @@
+
 package com.example.mobileappsca2
 
 import android.os.Bundle
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MobileAppsCA2Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
+                    CounterScreen(
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
@@ -31,7 +32,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun CounterScreen(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
         modifier = modifier
@@ -40,8 +41,8 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun CounterScreenPreview() {
     MobileAppsCA2Theme {
-        Greeting("Android")
+        CounterScreen("Android")
     }
 }
