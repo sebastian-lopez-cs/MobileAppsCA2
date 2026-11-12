@@ -50,6 +50,12 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
+    // Firebase Android BoM
+    implementation(platform("com.google.firebase:firebase-bom:34.17.0"))
+
+    // Firebase Authentication
+    implementation("com.google.firebase:firebase-auth")
+
     testImplementation(libs.junit)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
