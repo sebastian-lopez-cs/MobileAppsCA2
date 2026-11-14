@@ -8,7 +8,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -42,7 +45,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// Firebase authentication screen
+// Firebase authentication
 @Composable
 fun AuthenticationScreen(modifier: Modifier = Modifier) {
 
@@ -58,11 +61,16 @@ fun AuthenticationScreen(modifier: Modifier = Modifier) {
 
     if (isLoggedIn) {
 
-        Column(modifier = modifier) {
+        Column(
+            modifier = modifier.verticalScroll(rememberScrollState())
+        ) {
 
             Text(text = "Logged in: ${auth.currentUser?.email}")
 
             CounterScreen()
+
+            // Exceptions 1
+            ExceptionsOneScreen()
 
             Button(onClick = {
                 auth.signOut()
@@ -148,7 +156,7 @@ fun AuthenticationScreen(modifier: Modifier = Modifier) {
     }
 }
 
-// Stateful parent composable
+// State Management: stateful parent
 @Composable
 fun CounterScreen(modifier: Modifier = Modifier) {
 
@@ -166,7 +174,7 @@ fun CounterScreen(modifier: Modifier = Modifier) {
     )
 }
 
-// Stateless child composable
+// State Management: stateless child
 @Composable
 fun CounterButton(
     normalCount: Int,
@@ -182,6 +190,80 @@ fun CounterButton(
         Button(onClick = onIncrement) {
             Text(text = "Increment Both")
         }
+    }
+}
+
+// Exceptions 1: Precondition functions
+@Composable
+fun ExceptionsOneScreen() {
+
+    var isLightOn by remember { mutableStateOf(false) }
+    var numberInput by remember { mutableStateOf("") }
+
+    var lightResult by remember { mutableStateOf("") }
+    var numberResult by remember { mutableStateOf("") }
+
+    Column {
+
+        Text(text = "Exceptions 1")
+
+        // Scenario A: Light is not turned on
+        Text(text = "Light status")
+
+        Checkbox(
+            checked = isLightOn,
+            onCheckedChange = { isLightOn = it }
+        )
+
+        Text(
+            text = if (isLightOn) "Light ON" else "Light OFF"
+        )
+
+        Button(onClick = {
+
+            try {
+                check(isLightOn) { "Light is off" }
+                lightResult = "Light check passed"
+
+            } catch (e: IllegalStateException) {
+                lightResult = e.message ?: "Light check failed"
+            }
+
+        }) {
+            Text("Check Light")
+        }
+
+        Text(text = lightResult)
+
+        // Scenario B: Number cannot be negative
+        Text(text = "Enter a non-negative number")
+
+        TextField(
+            value = numberInput,
+            onValueChange = { numberInput = it },
+            label = { Text("Number") }
+        )
+
+        Button(onClick = {
+
+            try {
+                val number = numberInput.toIntOrNull()
+
+                require(number != null && number >= 0) {
+                    "Enter a non-negative whole number"
+                }
+
+                numberResult = "Number accepted: $number"
+
+            } catch (e: IllegalArgumentException) {
+                numberResult = e.message ?: "Invalid number"
+            }
+
+        }) {
+            Text("Check Number")
+        }
+
+        Text(text = numberResult)
     }
 }
 
