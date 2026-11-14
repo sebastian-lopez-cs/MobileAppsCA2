@@ -72,6 +72,9 @@ fun AuthenticationScreen(modifier: Modifier = Modifier) {
             // Exceptions 1
             ExceptionsOneScreen()
 
+            // Exceptions 2
+            ExceptionsTwoScreen()
+
             Button(onClick = {
                 auth.signOut()
                 isLoggedIn = false
@@ -264,6 +267,46 @@ fun ExceptionsOneScreen() {
         }
 
         Text(text = numberResult)
+    }
+}
+
+// Exceptions 2: Custom extendable exception
+@Composable
+fun ExceptionsTwoScreen() {
+
+    var wordInput by remember { mutableStateOf("") }
+    var wordResult by remember { mutableStateOf("") }
+
+    Column {
+
+        Text(text = "Exceptions 2")
+
+        Text(text = "Enter a word (maximum 10 characters)")
+
+        TextField(
+            value = wordInput,
+            onValueChange = { wordInput = it },
+            label = { Text("Word") }
+        )
+
+        Button(onClick = {
+
+            try {
+                if (wordInput.length > 10) {
+                    throw WordLengthException()
+                }
+
+                wordResult = "Word accepted: $wordInput"
+
+            } catch (e: WordLengthException) {
+                wordResult = e.message ?: "Invalid word length"
+            }
+
+        }) {
+            Text("Check Word")
+        }
+
+        Text(text = wordResult)
     }
 }
 
